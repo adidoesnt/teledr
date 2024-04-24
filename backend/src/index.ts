@@ -1,7 +1,13 @@
 import { Elysia } from "elysia";
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+const { NAME = 'bot', PORT = 3001 } = process.env;
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+const app = new Elysia().get("/", () => `${NAME} is running!`).listen(PORT);
+const { server } = app;
+
+if(server) {
+  const { hostname, port } = server;
+  console.log(`🦊 Elysia is running at ${hostname}:${port}!`);
+} else {
+  console.error("🦊 Elysia failed to start...");
+}
