@@ -6,9 +6,11 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "elysia": "latest",
+    "node-telegram-bot-api": "^0.65.1"
   },
   "devDependencies": {
+    "@types/node-telegram-bot-api": "^0.64.6",
     "bun-types": "latest"
   },
   "module": "src/index.js"
