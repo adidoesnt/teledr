@@ -1,7 +1,10 @@
 import Client, { Message } from "node-telegram-bot-api";
 import { polling } from "constants/polling";
 
-const { BOT_TOKEN = "DUMMY-TOKEN", WEBHOOK_URL = "DUMMY_URL" } = process.env;
+const {
+    BOT_TOKEN = "DUMMY-TOKEN",
+    WEBHOOK_URL = "DUMMY_URL",
+} = process.env;
 
 export const processMessage = async (message: Message) => {
     const { chat, text } = message;
