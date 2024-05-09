@@ -2,6 +2,7 @@ import { getMany } from "components/cache";
 import { getSummary } from "components/summariser";
 
 export const tldr = async (tokens: string[]) => {
+  tokens.shift();
   const numMessages = tokens[0] ? parseInt(tokens[0]) : 50;
   const messages = await getMany(numMessages);
   const text = messages.join("\n");

@@ -73,7 +73,7 @@ export class Bot {
     if (!this.validateChatId(chatId)) return;
     console.debug("received whatsapp message", msg);
     const tokens = body.split(" ");
-    const command = tokens.shift();
+    const command = tokens[0];
     const msgId = id._serialized;
     if (!command) {
       console.error("command is required");
