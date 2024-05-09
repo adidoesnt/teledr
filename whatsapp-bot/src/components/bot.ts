@@ -86,8 +86,9 @@ export class Bot {
     try {
       const name = author ?? "Someone";
       const content = `${name}: ${tokens.join(" ")}`;
+      const now = String(Date.now());
       console.log("saving message", content);
-      await save(messageId, content);
+      await save(now, content);
     } catch (error) {
       console.error(error);
     }
