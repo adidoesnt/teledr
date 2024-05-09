@@ -1,0 +1,7 @@
+{
+  "name": "summariser",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "source .envrc && flask run -h $HOST -p $PORT"
+  }
+}

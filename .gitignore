@@ -13,6 +13,7 @@ lerna-debug.log*
 # Caches
 
 .cache
+__pycache__/
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 
@@ -101,6 +102,7 @@ web_modules/
 # dotenv environment variable files
 
 .env
+.envrc
 .env.development.local
 .env.test.local
 .env.production.local
@@ -173,3 +175,11 @@ dist
 
 # Finder (MacOS) folder config
 .DS_Store
+
+# Redis
+dump.rdb
+
+# Python
+venv/
+*.py[cod]
+*$py.class
