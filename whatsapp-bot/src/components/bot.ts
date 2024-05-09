@@ -2,9 +2,14 @@ import { Client, type Message } from "whatsapp-web.js";
 import puppeteer from "puppeteer";
 import qrcode from "qrcode-terminal";
 import { tldr } from "handlers/tldr";
-import { save } from "./cache";
 
 const { BOT_CHAT_ID } = process.env;
+
+export type WhatsappMessage = Message & {
+  _data: {
+    notifyName: string;
+  };
+};
 
 export class Bot {
   client: Client;
@@ -64,12 +69,8 @@ export class Bot {
   }
 
   async processMessage(msg: Message) {
-    const {
-      from: chatId,
-      body,
-      id,
-      _data: { notifyName },
-    } = msg as Message & { _data: { notifyName: string } };
+    const message = msg as WhatsappMessage;
+    const { from: chatId, body, id } = message;
     if (!this.validateChatId(chatId)) return;
     console.debug("received whatsapp message", msg);
     const tokens = body.split(" ");
@@ -79,28 +80,17 @@ export class Bot {
       console.error("command is required");
       return;
     }
-    await this.processCommand(command, tokens, msgId, notifyName);
-  }
-
-  async saveMessage(messageId: string, tokens: string[], author?: string) {
-    try {
-      const name = author ?? "Someone";
-      const content = `${name}: ${tokens.join(" ")}`;
-      const now = String(Date.now());
-      console.log("saving message", content);
-      await save(now, content);
-    } catch (error) {
-      console.error(error);
-    }
+    await this.processCommand(command, tokens, message);
   }
 
   async processCommand(
     command: string,
     tokens: string[],
-    msgId: string,
-    notifyName?: string
+    msg: WhatsappMessage
   ) {
     let reply: string = "";
+    const { id } = msg;
+    const msgId = id._serialized;
     switch (command) {
       case "/start":
         reply = "Welcome to the bot";
@@ -109,10 +99,9 @@ export class Bot {
         reply = "Help message";
         break;
       case "/tldr":
-        reply = await tldr(tokens);
+        reply = await tldr(tokens, msg);
         break;
       default:
-        await this.saveMessage(msgId, tokens, notifyName);
         break;
     }
     if (reply.trim() !== "") {

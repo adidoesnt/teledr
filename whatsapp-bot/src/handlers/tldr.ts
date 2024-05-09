@@ -1,11 +1,18 @@
-import { getMany } from "components/cache";
+import type { WhatsappMessage } from "components/bot";
 import { getSummary } from "components/summariser";
 
-export const tldr = async (tokens: string[]) => {
+export const tldr = async (tokens: string[], msg: WhatsappMessage) => {
   tokens.shift();
-  const numMessages = tokens[0] ? parseInt(tokens[0]) : 50;
-  const messages = await getMany(numMessages);
-  const text = messages.join("\n");
-  const summary = await getSummary(text, numMessages);
+  const limit = tokens[0] ? parseInt(tokens[0]) : 50;
+  const chat = await msg.getChat();
+  const messages = await chat.fetchMessages({ limit });
+  const text = messages.map((msg) => {
+    const {
+      body,
+      _data: { notifyName },
+    } = msg as WhatsappMessage;
+    return `${notifyName ? `@${notifyName}` : "Someone"}: ${body}`;
+  }).join("\n");
+  const summary = await getSummary(text, limit);
   return summary;
 };
