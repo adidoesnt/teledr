@@ -5,6 +5,8 @@ const {
   SUMMARISER_API_KEY: apiKey = "DUMMY-API-KEY",
 } = process.env;
 
+const ERR_MSG = "Sorry, I couldn't summarise that.";
+
 export const getSummary = async (text: string, sourceMessagesNum: number) => {
   try {
     const body = {
@@ -18,9 +20,9 @@ export const getSummary = async (text: string, sourceMessagesNum: number) => {
     });
     const { data } = response;
     const { summary } = data;
-    return `Here's a summary of the last ${sourceMessagesNum} messages: ${summary}`;
+    return summary ?? ERR_MSG;
   } catch (error) {
     console.error(error);
-    return "Sorry, I couldn't summarise that.";
+    return ERR_MSG;
   }
 };

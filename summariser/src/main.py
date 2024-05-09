@@ -28,14 +28,17 @@ def authorize():
 def summarise():
     data = request.get_json()
     content_to_summarise = data.get('content')
+    prompt = f"""You are a llama assistant that helps summarise conversations,
+                    could you summarise the following conversation? Do not include anything except the summarised content:
+                    {content_to_summarise}."""
+    print(f"prompt: {prompt}")
+    print(f"content_to_summarise: {content_to_summarise}")
     api_request_json = {
         "model": "llama3-70b",
         "messages": [
             {
                 "role": "system", 
-                "content": f"""You are a llama assistant that helps summarise conversations,
-                    could you summarise the following conversation? Do not include anything except the summarised content:
-                    {content_to_summarise}."""
+                "content": prompt
             },
         ]
     }
