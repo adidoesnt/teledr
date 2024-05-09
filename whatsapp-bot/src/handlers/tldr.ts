@@ -13,7 +13,7 @@ export const tldr = async (tokens: string[], msg: WhatsappMessage) => {
         body,
         _data: { notifyName },
       } = msg as WhatsappMessage;
-      return `${notifyName ? `@${notifyName}` : "Someone"}: ${body}`;
+      return `${notifyName ?? "Someone"}: ${body}`;
     })
     .join("\n");
   const summary = await getSummary(text, limit);
