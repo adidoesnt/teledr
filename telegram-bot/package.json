@@ -1,5 +1,5 @@
 {
-  "name": "teledr-bot",
+  "name": "telegram-bot",
   "version": "1.0.50",
   "scripts": {
     "start": "bun run src/index.ts",
