@@ -21,9 +21,15 @@ export const save = async (key: string, value: string) => {
     cache.set(key, value);
 };
 
-export const getMany = async (n: number) => {
-    const keys = await cache.keys("*");
-    const sortedKeys = keys.sort((a, b) => Number(b) - Number(a));
+const comparator = (a: string, b: string) => {
+    const [_, aId] = a.split(":");
+    const [__, bId] = b.split(":");
+    return Number(bId) - Number(aId);
+};
+
+export const getMany = async (prefix: number, n: number) => {
+    const keys = await cache.keys(`${prefix}:*`);
+    const sortedKeys = keys.sort(comparator);
     if (sortedKeys.length < n) {
         return Promise.all(sortedKeys.map(async (key) => await cache.get(key)));
     }

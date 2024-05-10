@@ -28,17 +28,23 @@ export const processMessage = async (message: Message) => {
     }
 };
 
+export const getKey = (chatId: number, messageId: string) => {
+    return `${chatId}:${messageId}`;
+}
+
 export const saveMessage = async (message: Message) => {
     try {
-        const { text, message_id, from } = message;
+        const { text, message_id, from, chat } = message;
         const messageId = message_id.toString();
+        const { id: chatId } = chat;
         if (!from) {
             throw new Error("No from in message");
         }
         const { username, first_name } = from;
         const author = first_name ?? username;
         const content = `${author}: ${text}`;
-        await save(messageId, content);
+        const key = getKey(chatId, messageId);
+        await save(key, content);
         console.log(`Saved message: ${content}`);
     } catch (error) {
         console.error(error);
