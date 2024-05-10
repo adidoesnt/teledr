@@ -6,6 +6,7 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@types/bun": "^1.1.1",
     "axios": "^1.6.8",
     "elysia": "latest",
     "node-telegram-bot-api": "^0.65.1",
