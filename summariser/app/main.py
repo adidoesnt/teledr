@@ -13,7 +13,7 @@ load_dotenv()
 env = os.getenv('ENV', 'dev')
 
 dictConfig(LogConfig().model_dump())
-logger = logging.getLogger("summariser")
+logger = logging.getLogger(os.getenv('LOGGER_NAME'))
 
 llama_api_key = os.getenv('LLAMA_API_KEY', 'DUMMY-API-KEY')
 server_api_key = os.getenv('SERVER_API_KEY', 'DUMMY-API-KEY')
