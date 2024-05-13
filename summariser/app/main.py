@@ -3,10 +3,17 @@ import logging
 from logconfig import LogConfig
 
 import os
-from fastapi import FastAPI, HTTPException, Request, Depends, Security, status
 from pydantic import BaseModel
+
+from fastapi import FastAPI, HTTPException, Request, Depends, Security, status
 from fastapi.security import APIKeyHeader
+
 from llamaapi import LlamaAPI
+
+from langchain_experimental.llms import ChatLlamaAPI
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,6 +27,7 @@ server_api_key = os.getenv('SERVER_API_KEY', 'DUMMY-API-KEY')
 api_key_header = APIKeyHeader(name="X-API-Key")
 
 llama = LlamaAPI(llama_api_key)
+model = ChatLlamaAPI(client=llama)
 app = FastAPI()
 
 
@@ -43,25 +51,16 @@ async def verify_api_key(api_key: str = Security(api_key_header)):
 async def summarise(summariser_input: SummariserInput):
     
     content = summariser_input.content
-    prompt = f"""You are a llama assistant that helps summarise conversations, \
+
+    prompt_str = """You are a llama assistant that helps summarise conversations, \
 could you summarise the following conversation? Do not include anything except the summarised content:
 {content}."""
+    prompt_template = ChatPromptTemplate.from_template(prompt_str)
+    output_parser = StrOutputParser()
 
-    api_request_json = {
-        "model": "llama3-70b",
-        "messages": [
-            {
-                "role": "system", 
-                "content": prompt
-            },
-        ]
-    }
+    chain = prompt_template | model | output_parser
+    summary = chain.invoke({"content": content})
 
-    logger.debug(prompt)
     logger.debug(content)
-
-    response = llama.run(api_request_json)
-    response_json = response.json()
-    summary = response_json['choices'][0]['message']['content']
 
     return { "summary": summary }
