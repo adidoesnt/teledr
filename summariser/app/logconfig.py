@@ -1,11 +1,15 @@
 from pydantic import BaseModel
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class LogConfig(BaseModel):
     """Logging configuration to be set for the server"""
 
-    LOGGER_NAME: str = "mycoolapp"
-    LOG_FORMAT: str = "%(levelprefix)s | %(asctime)s | %(message)s"
-    LOG_LEVEL: str = "DEBUG"
+    LOGGER_NAME: str = os.getenv('LOGGER_NAME')
+    LOG_FORMAT: str = os.getenv('LOG_FORMAT')
+    LOG_LEVEL: str = os.getenv('LOG_LEVEL')
 
     # Logging config
     version: int = 1

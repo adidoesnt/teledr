@@ -13,15 +13,15 @@ load_dotenv()
 env = os.getenv('ENV', 'dev')
 
 dictConfig(LogConfig().model_dump())
-logger = logging.getLogger("mycoolapp")
+logger = logging.getLogger("summariser")
 
 llama_api_key = os.getenv('LLAMA_API_KEY', 'DUMMY-API-KEY')
-llama = LlamaAPI(llama_api_key)
 server_api_key = os.getenv('SERVER_API_KEY', 'DUMMY-API-KEY')
-
-
 api_key_header = APIKeyHeader(name="X-API-Key")
+
+llama = LlamaAPI(llama_api_key)
 app = FastAPI()
+
 
 class SummariserInput(BaseModel):
     content: str
