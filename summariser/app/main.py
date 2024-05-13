@@ -23,6 +23,9 @@ server_api_key = os.getenv('SERVER_API_KEY', 'DUMMY-API-KEY')
 api_key_header = APIKeyHeader(name="X-API-Key")
 app = FastAPI()
 
+class SummariserInput(BaseModel):
+    content: str
+
 
 @app.get("/")
 def health():
@@ -37,10 +40,12 @@ async def verify_api_key(api_key: str = Security(api_key_header)):
     )
 
 @app.post("/summarise/", dependencies=[Depends(verify_api_key)])
-async def summarise(content: str):
-    prompt = f"""You are a llama assistant that helps summarise conversations,
-                    could you summarise the following conversation? Do not include anything except the summarised content:
-                    {content}."""
+async def summarise(summariser_input: SummariserInput):
+    
+    content = summariser_input.content
+    prompt = f"""You are a llama assistant that helps summarise conversations, \
+could you summarise the following conversation? Do not include anything except the summarised content:
+{content}."""
 
     api_request_json = {
         "model": "llama3-70b",
