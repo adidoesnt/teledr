@@ -17,7 +17,7 @@ class LlamaBot:
         summarise_prompt = ChatPromptTemplate.from_template(self.config["summariser_prompt"])
         output_parser = StrOutputParser()
 
-        self.chain = chain = summarise_prompt | model | output_parser
+        self.chain = summarise_prompt | model | output_parser
 
     def query(self, groupchat_history: str) -> str:
         return self.chain.invoke({"groupchat_history": groupchat_history})
